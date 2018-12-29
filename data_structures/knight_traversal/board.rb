@@ -58,11 +58,11 @@ class Space
   attr_reader :neighbors
   attr_accessor :location, :piece, :visited, :parent
 
-  def initialize(location, neighbors = nil, piece = nil, visited = false, parent = nil)
+  def initialize(location, neighbors)
     @location = location
     @neighbors = neighbors
-    @parent = parent
-    @piece = piece
-    @visited = visited
+    @parent = nil
+    @piece = nil
+    @visited = false
   end
 end
