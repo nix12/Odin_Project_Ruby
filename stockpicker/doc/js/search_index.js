@@ -1,0 +1,1 @@
+var search_data = {"index":{"searchIndex":["object","stock_picker()"],"longSearchIndex":["object","object#stock_picker()"],"info":[["Object","","Object.html","",""],["stock_picker","Object","Object.html#method-i-stock_picker","(arr)",""]]}}
