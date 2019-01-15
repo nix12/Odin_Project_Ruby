@@ -18,11 +18,13 @@ game = SetupBoard.new(board)
 game.setup_board
 display = SetupDisplay.new(board)
 display.setup_display
-game.gameboard.print_board
 display.gameboard.print_display
-select_piece(game)
-display.gameboard.print_display
-# select_piece(game)
-# game.gameboard.print_display
-# pp game.gameboard
+
+loop do
+  select_piece(game)
+  # game.gameboard.print_board
+  display.gameboard.print_display
+end
+
+
 
