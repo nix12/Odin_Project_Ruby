@@ -57,7 +57,7 @@ class SetupBoard
     create_white_bishops
     create_white_queen
     create_white_king
-    create_white_pawns
+    # create_white_pawns
   end
 
   def create_white_knights
@@ -97,7 +97,7 @@ class SetupBoard
     create_black_bishops
     create_black_queen
     create_black_king
-    create_black_pawns
+    # create_black_pawns
   end
 
   def create_black_knights
@@ -111,8 +111,8 @@ class SetupBoard
   end
 
   def create_black_bishops
-    gameboard.find([7, 2]).piece = black_rook
-    gameboard.find([7, 5]).piece = black_rook
+    gameboard.find([7, 2]).piece = black_bishop
+    gameboard.find([7, 5]).piece = black_bishop
   end
 
   def create_black_queen

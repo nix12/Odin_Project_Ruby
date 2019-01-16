@@ -25,6 +25,3 @@ loop do
   # game.gameboard.print_board
   display.gameboard.print_display
 end
-
-
-

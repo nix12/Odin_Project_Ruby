@@ -58,7 +58,7 @@ class SetupDisplay
     create_white_bishops
     create_white_queen
     create_white_king
-    create_white_pawns
+    # create_white_pawns
   end
 
   def create_white_knights
@@ -98,7 +98,7 @@ class SetupDisplay
     create_black_bishops
     create_black_queen
     create_black_king
-    create_black_pawns
+    # create_black_pawns
   end
 
   def create_black_knights
