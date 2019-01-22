@@ -11,18 +11,18 @@ require_relative "../pieces/pawn"
 
 class SetupDisplay
   attr_reader :gameboard, 
-    :white_knight, 
-    :black_knight, 
-    :white_rook, 
-    :black_rook,
-    :white_bishop,
-    :black_bishop,
-    :white_queen,
-    :black_queen,
-    :white_king,
-    :black_king,
-    :white_pawn,
-    :black_pawn
+              :white_knight, 
+              :black_knight, 
+              :white_rook, 
+              :black_rook,
+              :white_bishop,
+              :black_bishop,
+              :white_queen,
+              :black_queen,
+              :white_king,
+              :black_king,
+              :white_pawn,
+              :black_pawn
 
   def initialize(gameboard)
     @gameboard = gameboard
@@ -58,7 +58,7 @@ class SetupDisplay
     create_white_bishops
     create_white_queen
     create_white_king
-    # create_white_pawns
+    create_white_pawns
   end
 
   def create_white_knights
@@ -98,7 +98,7 @@ class SetupDisplay
     create_black_bishops
     create_black_queen
     create_black_king
-    # create_black_pawns
+    create_black_pawns
   end
 
   def create_black_knights

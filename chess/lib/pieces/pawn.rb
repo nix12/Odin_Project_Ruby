@@ -8,12 +8,14 @@ class Pawn < Piece
   def initialize(color)
     super(color)
     @icon = set_icon
-    @move_set = [
-      [1, 0]
-    ].freeze
+    @move_set = load_move_set
   end
 
   def set_icon
     color == "white" ? "\u265F" : "\u2659"
+  end
+
+  def load_move_set
+    self.color == "white" ? [[1, 0]] : [[-1, 0]]
   end
 end

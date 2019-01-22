@@ -29,36 +29,34 @@ class Piece
 
   def move(gameboard, start_location, end_location)
     if self.class.to_s == "Bishop" || self.class.to_s == "Queen" &&
-      (start_location[0] - end_location[0] > 1 || 
-      start_location[0] - end_location[0] < -1 || 
-      start_location[1] - end_location[1] > 1 || 
-      start_location[1] - end_location[1] < -1)
-      
+      ((start_location[0] - end_location[0] > 1 ||
+      start_location[0] - end_location[0] < -1) &&
+      (start_location[1] - end_location[1] > 1 ||
+      start_location[1] - end_location[1] < -1))
+
       check = ranged_diagonal(gameboard, start_location, end_location)
 
       add_piece(gameboard, start_location, end_location) unless check
       remove_piece(gameboard, start_location, end_location) unless check
-    end
-
-    if self.class.to_s == "Rook" || self.class.to_s == "Queen" && 
-      (start_location[0] - end_location[0] > 1 || 
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (start_location[0] - end_location[0] > 1 ||
       start_location[0] - end_location[0] < -1)
-
 
       check = ranged_vertical(gameboard, start_location, end_location)
 
       add_piece(gameboard, start_location, end_location) unless check
       remove_piece(gameboard, start_location, end_location) unless check
-    end
-
-    if self.class.to_s == "Rook" || self.class.to_s == "Queen" && 
-      (start_location[1] - end_location[1] > 1 || 
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (start_location[1] - end_location[1] > 1 ||
       start_location[1] - end_location[1] < -1)
 
       check = ranged_horizontal(gameboard, start_location, end_location)
 
       add_piece(gameboard, start_location, end_location) unless check
       remove_piece(gameboard, start_location, end_location) unless check
+    else
+      add_piece(gameboard, start_location, end_location)
+      remove_piece(gameboard, start_location, end_location)
     end
 
     clear_moves
@@ -100,11 +98,7 @@ class Piece
       end
     end
 
-    moves.each do |move|
-      return true if check_if_occupied(gameboard, move)
-    end
-
-    false
+    check_if_occupied(gameboard)
   end
 
   def ranged_horizontal(gameboard, start_location, end_location)
@@ -118,11 +112,7 @@ class Piece
       end
     end
 
-    moves.each do |move|
-      return true if check_if_occupied(gameboard, move)
-    end
-
-    false
+    check_if_occupied(gameboard)
   end
 
   def ranged_diagonal(gameboard, start_location, end_location)
@@ -144,19 +134,17 @@ class Piece
       end
     end
 
-    moves.each do |move|
-      return true if check_if_occupied(gameboard, move)
-    end
-
-    false
+    check_if_occupied(gameboard)
   end
 
-  def check_if_occupied(gameboard, location)
-    if !gameboard.find(location).piece.nil?
-      puts "Illegal movement"
-      true
-    else
-      false
+  def check_if_occupied(gameboard)
+    moves.each do |move|
+      unless gameboard.find(move).piece.nil?
+        puts "Illegal movement"
+        return true
+      end
+
+      return false
     end
   end
 end
