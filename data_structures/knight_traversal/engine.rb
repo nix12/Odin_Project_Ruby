@@ -19,9 +19,9 @@ knight.move(gameboard, start_location, end_location)
 
 knight.print_path.reverse_each.with_index do |space, i|
   if knight.print_path.reverse.length - 1 == i
-    gameboard.display[space.location[0]][space.location[1]] = "\u265E"
+    gameboard.display[space.location[1]][space.location[0]] = "\u265E"
   else
-    gameboard.display[space.location[0]][space.location[1]] = i
+    gameboard.display[space.location[1]][space.location[0]] = i
   end
 end
 

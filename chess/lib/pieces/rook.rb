@@ -13,7 +13,9 @@ class Rook < Piece
     ].freeze
   end
 
-  def set_icon
-    color == "white" ? "\u265C" : "\u2656"
-  end
+  private
+
+    def set_icon
+      color == "white" ? "\u265C" : "\u2656"
+    end
 end

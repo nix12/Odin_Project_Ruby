@@ -23,8 +23,60 @@ class Piece
     end
   end
 
+  def replace_piece(gameboard, start_location, end_location)
+    if create_moves(start_location) && valid_moves(end_location)
+      gameboard.find(end_location).piece = nil
+      gameboard.display[end_location[0]][end_location[1]] = "*"
+
+      gameboard.find(end_location).piece = self
+      gameboard.display[end_location[0]][end_location[1]] = icon
+    end
+  end
+
+  def clear_moves_duplicates
+    moves.uniq!
+  end
+
   def clear_moves
     moves.clear
+  end
+
+  def take_piece(gameboard, start_location, end_location)
+    if self.class.to_s == "Bishop" || self.class.to_s == "Queen" &&
+      ((start_location[0] - end_location[0] > 1 ||
+      start_location[0] - end_location[0] < -1) &&
+      (start_location[1] - end_location[1] > 1 ||
+      start_location[1] - end_location[1] < -1))
+
+      check = ranged_diagonal(gameboard, start_location, end_location)
+
+      replace_piece(gameboard, start_location, end_location) unless check
+      remove_piece(gameboard, start_location, end_location) unless check
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (start_location[0] - end_location[0] > 1 ||
+      start_location[0] - end_location[0] < -1)
+
+      check = ranged_vertical(gameboard, start_location, end_location)
+
+      replace_piece(gameboard, start_location, end_location) unless check
+      remove_piece(gameboard, start_location, end_location) unless check
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (start_location[1] - end_location[1] > 1 ||
+      start_location[1] - end_location[1] < -1)
+
+      check = ranged_horizontal(gameboard, start_location, end_location)
+
+      replace_piece(gameboard, start_location, end_location) unless check
+      remove_piece(gameboard, start_location, end_location) unless check
+    else
+      replace_piece(gameboard, start_location, end_location)
+      remove_piece(gameboard, start_location, end_location)
+    end
+
+    create_moves(end_location)
+    clear_moves_duplicates
+    check?(gameboard)
+    clear_moves
   end
 
   def move(gameboard, start_location, end_location)
@@ -59,6 +111,9 @@ class Piece
       remove_piece(gameboard, start_location, end_location)
     end
 
+    create_moves(end_location)
+    clear_moves_duplicates
+    check?(gameboard)
     clear_moves
   end
 
@@ -74,6 +129,8 @@ class Piece
 
       moves << [x, y]
     end
+
+    moves.uniq
   end
 
   def valid_moves(end_location)
@@ -98,7 +155,7 @@ class Piece
       end
     end
 
-    check_if_occupied(gameboard)
+    check_if_occupied?(gameboard)
   end
 
   def ranged_horizontal(gameboard, start_location, end_location)
@@ -112,7 +169,7 @@ class Piece
       end
     end
 
-    check_if_occupied(gameboard)
+    check_if_occupied?(gameboard)
   end
 
   def ranged_diagonal(gameboard, start_location, end_location)
@@ -134,17 +191,37 @@ class Piece
       end
     end
 
-    check_if_occupied(gameboard)
+    check_if_occupied?(gameboard)
   end
 
-  def check_if_occupied(gameboard)
+  def check_if_occupied?(gameboard)
+    valid = []
+
     moves.each do |move|
-      unless gameboard.find(move).piece.nil?
+      valid << move if gameboard.find(move).piece.respond_to?(:color) && 
+        gameboard.find(move).piece.color != color
+      first_piece = nil
+      first_piece = gameboard.find(valid[0]).piece if valid.first != nil
+
+      if first_piece != gameboard.find(move).piece && !gameboard.find(move).piece.nil? 
         puts "Illegal movement"
         return true
       end
-
-      return false
     end
+
+    false
+  end
+
+  def check?(gameboard)
+    king_locations = gameboard.find_by_piece("king")
+    king_locations.each do |king|
+      puts "#{ gameboard.find(king).piece.color.capitalize } player is in check" if moves.include?(king) && 
+        gameboard.find(king).piece.color != color 
+
+      return true if moves.include?(king) && 
+        gameboard.find(king).piece.color != color 
+    end
+
+    false
   end
 end

@@ -23,6 +23,12 @@ class Board
     board.detect { |node| node.location == value }
   end
 
+  def find_by_piece(piece)
+    piece = piece.capitalize
+
+    board.map { |node| node.location if node.piece.class.to_s == piece }.compact
+  end
+
   def build_board
     Board.x_coordinate.each do |x|
       Board.y_coordinate.each do |y|

@@ -11,11 +11,13 @@ class Pawn < Piece
     @move_set = load_move_set
   end
 
-  def set_icon
-    color == "white" ? "\u265F" : "\u2659"
-  end
+  private
 
-  def load_move_set
-    self.color == "white" ? [[1, 0]] : [[-1, 0]]
-  end
+    def set_icon
+      color == "white" ? "\u265F" : "\u2659"
+    end
+
+    def load_move_set
+      self.color == "white" ? [[1, 0]] : [[-1, 0]]
+    end
 end

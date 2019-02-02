@@ -57,7 +57,7 @@ class SetupBoard
     create_white_bishops
     create_white_queen
     create_white_king
-    create_white_pawns
+    # create_white_pawns
   end
 
   def create_white_knights

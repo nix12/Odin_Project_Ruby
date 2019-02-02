@@ -13,7 +13,9 @@ class Queen < Piece
     ].freeze
   end
 
-  def set_icon
-    color == "white" ? "\u265B" : "\u2655"
-  end
+  private
+
+    def set_icon
+      color == "white" ? "\u265B" : "\u2655"
+    end
 end

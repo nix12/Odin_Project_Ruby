@@ -13,7 +13,9 @@ class Bishop < Piece
     ].freeze
   end
 
-  def set_icon
-    color == "white" ? "\u265D" : "\u2657"
-  end
+  private
+
+    def set_icon
+      color == "white" ? "\u265D" : "\u2657"
+    end
 end
