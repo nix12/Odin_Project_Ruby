@@ -14,6 +14,5 @@ display.gameboard.print_display
 loop do
   GameMechanics.select_piece(game)
   # game.gameboard.print_board
-  # p GameMechanics.check(board)
   display.gameboard.print_display
 end

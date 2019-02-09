@@ -68,6 +68,16 @@ class Piece
 
       replace_piece(gameboard, start_location, end_location) unless check
       remove_piece(gameboard, start_location, end_location) unless check
+    elsif self.class.to_s == "Pawn" &&
+      ((start_location[0] - end_location[0] == 1 ||
+        start_location[0] - end_location[0] == -1) &&
+        (start_location[1] - end_location[1] == 1 ||
+        start_location[1] - end_location[1] == -1))
+
+      check = pawn_diagonal(gameboard, start_location)
+
+      replace_piece(gameboard, start_location, end_location) if check
+      remove_piece(gameboard, start_location, end_location) if check
     else
       replace_piece(gameboard, start_location, end_location)
       remove_piece(gameboard, start_location, end_location)
@@ -106,6 +116,14 @@ class Piece
 
       add_piece(gameboard, start_location, end_location) unless check
       remove_piece(gameboard, start_location, end_location) unless check
+    elsif self.class.to_s == "Pawn" &&
+      (start_location[0] - end_location[0] == 2 ||
+      start_location[0] - end_location[0] == 2)
+    
+      check = pawn_two_move_forward(gameboard, start_location)
+
+      add_piece(gameboard, start_location, end_location) unless check
+      remove_piece(gameboard, start_location, end_location) unless check
     else
       add_piece(gameboard, start_location, end_location)
       remove_piece(gameboard, start_location, end_location)
@@ -129,8 +147,6 @@ class Piece
 
       moves << [x, y]
     end
-
-    moves.uniq
   end
 
   def valid_moves(end_location)
@@ -203,7 +219,7 @@ class Piece
       first_piece = nil
       first_piece = gameboard.find(valid[0]).piece if valid.first != nil
 
-      if first_piece != gameboard.find(move).piece && !gameboard.find(move).piece.nil? 
+      if first_piece != self && !gameboard.find(move).piece.nil? 
         puts "Illegal movement"
         return true
       end
