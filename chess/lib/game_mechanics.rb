@@ -19,4 +19,22 @@ module GameMechanics
       start_piece.move(game.gameboard, start_location, end_location)
     end
   end
+
+  # def self.get_king(gameboard, player_color)
+  #   king_locations = gameboard.find_by_piece("king")
+
+  #   king_locations.find do |king| 
+  #     gameboard.find(king).piece if gameboard.find(king).piece.color != player_color
+  #   end
+  # end
+
+  # def self.checkmate?(gameboard, king)
+  #   gameboard.board.each do |space|
+  #     unless space.piece.nil?
+  #       return true if space.piece.check?(gameboard)
+  #     end
+  #   end
+
+  #   false
+  # end
 end

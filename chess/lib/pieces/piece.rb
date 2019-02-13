@@ -41,6 +41,15 @@ class Piece
     moves.clear
   end
 
+  def check_and_clear(gameboard, end_location)
+    create_moves(end_location)
+    clear_moves_duplicates
+    check?(gameboard)
+    clear_moves
+    checkmate?(gameboard, end_location, get_king(gameboard))
+    clear_moves
+  end
+
   def take_piece(gameboard, start_location, end_location)
     if self.class.to_s == "Bishop" || self.class.to_s == "Queen" &&
       ((start_location[0] - end_location[0] > 1 ||
@@ -83,10 +92,7 @@ class Piece
       remove_piece(gameboard, start_location, end_location)
     end
 
-    create_moves(end_location)
-    clear_moves_duplicates
-    check?(gameboard)
-    clear_moves
+    check_and_clear(gameboard, end_location)
   end
 
   def move(gameboard, start_location, end_location)
@@ -129,10 +135,7 @@ class Piece
       remove_piece(gameboard, start_location, end_location)
     end
 
-    create_moves(end_location)
-    clear_moves_duplicates
-    check?(gameboard)
-    clear_moves
+    check_and_clear(gameboard, end_location)
   end
 
   def create_moves(start_location)
@@ -239,5 +242,58 @@ class Piece
     end
 
     false
+  end
+
+  def get_king(gameboard)
+    king_locations = gameboard.find_by_piece("king")
+
+    king_locations.find do |king| 
+      gameboard.find(king).piece if gameboard.find(king).piece.color != color
+    end
+  end
+
+  def king_in_path?(gameboard, start_location, end_location, king_location)
+    if self.class.to_s == "Bishop" || self.class.to_s == "Queen" &&
+      ((end_location[0] - king_location[0] > 1 ||
+      end_location[0] - king_location[0] < -1) &&
+      (end_location[1] - king_location[1] > 1 ||
+      end_location[1] - king_location[1] < -1))
+
+      ranged_diagonal(gameboard, start_location, king_location)
+      return true if moves.include?(king_location)
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (end_location[0] - king_location[0] > 1 ||
+      end_location[0] - king_location[0] < -1)
+
+      ranged_vertical(gameboard, start_location, king_location)
+      return true if moves.include?(king_location)
+    elsif self.class.to_s == "Rook" || self.class.to_s == "Queen" &&
+      (end_location[1] - king_location[1] > 1 ||
+      end_location[1] - king_location[1] < -1)
+
+      ranged_horizontal(gameboard, start_location, king_location)
+      return true if moves.include?(king_location)
+    elsif ((end_location[0] - king_location[0] == 1 ||
+      end_location[0] - king_location[0] == -1) &&
+      (end_location[1] - king_location[1] == 1 ||
+      end_location[1] - king_location[1] == -1)) || 
+      (end_location[0] - king_location[0] == 1 ||
+      end_location[0] - king_location[0] == -1) ||
+      (start_location[1] - end_location[1]  1 ||
+      start_location[1] - end_location[1] < -1)
+
+      create_moves(end_location)
+      return true if moves.include?(king_location)
+    end
+
+    false
+  end
+
+  def checkmate?(gameboard, end_location, king_location)
+    gameboard.find(king_location).piece.move_set.all? do |move|
+      if king_in_path?(gameboard, move, end_location, king_location)
+        puts "#{ gameboard.find(king_location).piece.color.capitalize } player is in checkmate"
+      end
+    end
   end
 end

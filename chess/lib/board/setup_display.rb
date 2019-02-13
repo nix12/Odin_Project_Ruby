@@ -98,7 +98,7 @@ class SetupDisplay
     create_black_bishops
     create_black_queen
     create_black_king
-    create_black_pawns
+    # create_black_pawns
   end
 
   def create_black_knights
