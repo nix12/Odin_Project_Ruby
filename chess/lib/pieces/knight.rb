@@ -13,9 +13,9 @@ class Knight < Piece
     ].freeze
   end
 
-  private
+private
 
-    def set_icon
-      color == "white" ? "\u265E" : "\u2658"
-    end
+  def set_icon
+    color == "white" ? "\u265E" : "\u2658"
+  end
 end

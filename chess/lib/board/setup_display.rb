@@ -8,7 +8,6 @@ require_relative "../pieces/pawn"
 
 # Handles "Setup" of the display and placement of the
 # chess pieces in the display.
-
 class SetupDisplay
   attr_reader :gameboard, 
               :white_knight, 

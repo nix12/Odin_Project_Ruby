@@ -1,7 +1,6 @@
 require_relative "piece"
 
 # Handles creation of the Rook chess piece
-
 class Rook < Piece
   attr_reader :move_set, :icon
 
@@ -13,9 +12,9 @@ class Rook < Piece
     ].freeze
   end
 
-  private
+private
 
-    def set_icon
-      color == "white" ? "\u265C" : "\u2656"
-    end
+  def set_icon
+    color == "white" ? "\u265C" : "\u2656"
+  end
 end

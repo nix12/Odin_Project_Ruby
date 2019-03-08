@@ -7,7 +7,6 @@ require_relative "../pieces/king"
 require_relative "../pieces/pawn"
 
 # Handles the "Setup" of chess board with chess pieces.
-
 class SetupBoard
   attr_reader :gameboard,
               :white_knight,
