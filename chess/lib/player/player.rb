@@ -1,24 +1,40 @@
+require_relative '../base/base'
+
 # Handles creation of player instance
-class Player
+class Player < Base
   attr_accessor :name,
                 :color,
-                :active
+                :active,
+                :check
 
-  def initialize(name, color)
+  def initialize(name, color, active = false, check = false)
     @name = name
     @color = color
-    @active = false
+    @active = active
+    @check = check
   end
 
   def self.active_user
-    ObjectSpace.each_object(self) { |player| return player if player.active }
+    ObjectSpace.each_object(self) do |player|
+      return player if player.active
+    end
   end
 
   def self.active_user_name
-    ObjectSpace.each_object(self) { |player| return player.name if player.active }
+    ObjectSpace.each_object(self) do |player|
+      return player.name if player.active
+    end
+  end
+
+  def self.inactive_user
+    ObjectSpace.each_object(self) do |player|
+      return player unless player.active
+    end
   end
 
   def self.inactive_user_name
-    ObjectSpace.each_object(self) { |player| return player.name unless player.active }
+    ObjectSpace.each_object(self) do |player|
+      return player.name unless player.active
+    end
   end
 end

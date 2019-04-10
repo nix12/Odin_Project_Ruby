@@ -1,14 +1,15 @@
-require_relative "space"
+require_relative 'square'
+require_relative '../base/base'
+require 'ostruct'
 
 # Handles initializing, building and displaying chess board.
 # Also, provides ability to find specifc spaces in the chess board.
-
-class Board
+class Board < Base
   attr_accessor :board, :display
 
-  def initialize
-    @board = []
-    @display = []
+  def initialize(board = [], display = [])
+    @board = board
+    @display = display
   end
 
   def self.x_coordinate
@@ -32,7 +33,7 @@ class Board
   def build_board
     Board.x_coordinate.each do |x|
       Board.y_coordinate.each do |y|
-        node = Space.new([x, y])
+        node = Square.new([x, y])
         board << node
       end
     end
@@ -43,17 +44,17 @@ class Board
   end
 
   def build_display
-    Board.x_coordinate.each.with_index do |x, i|
+    Board.x_coordinate.each.with_index do |_x, _i|
       row = []
       display << row
 
-      Board.y_coordinate.each.with_index do |y, j|
-        row << "*"
+      Board.y_coordinate.each.with_index do |_y, _j|
+        row << '*'
       end
     end
   end
 
   def print_display
-    display.reverse_each { |row| p row.join(" ") }
+    display.reverse_each { |row| p row.join(' ') }
   end
 end

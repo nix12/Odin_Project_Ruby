@@ -1,4 +1,4 @@
-require_relative "piece"
+require_relative 'piece'
 
 # Handles creation of the Rook chess piece
 class Rook < Piece
@@ -12,9 +12,9 @@ class Rook < Piece
     ].freeze
   end
 
-private
+  private
 
   def set_icon
-    color == "white" ? "\u265C" : "\u2656"
+    color == 'white' ? "\u265C" : "\u2656"
   end
 end

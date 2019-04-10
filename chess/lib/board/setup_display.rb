@@ -1,18 +1,18 @@
-require_relative "board"
-require_relative "../pieces/knight"
-require_relative "../pieces/rook"
-require_relative "../pieces/bishop"
-require_relative "../pieces/queen"
-require_relative "../pieces/king"
-require_relative "../pieces/pawn"
+require_relative 'board'
+require_relative '../pieces/knight'
+require_relative '../pieces/rook'
+require_relative '../pieces/bishop'
+require_relative '../pieces/queen'
+require_relative '../pieces/king'
+require_relative '../pieces/pawn'
 
 # Handles "Setup" of the display and placement of the
 # chess pieces in the display.
 class SetupDisplay
-  attr_reader :gameboard, 
-              :white_knight, 
-              :black_knight, 
-              :white_rook, 
+  attr_reader :gameboard,
+              :white_knight,
+              :black_knight,
+              :white_rook,
               :black_rook,
               :white_bishop,
               :black_bishop,
@@ -26,19 +26,19 @@ class SetupDisplay
   def initialize(gameboard)
     @gameboard = gameboard
 
-    @white_knight = Knight.new("white")
-    @white_rook = Rook.new("white")
-    @white_bishop = Bishop.new("white")
-    @white_queen = Queen.new("white")
-    @white_king = King.new("white")
-    @white_pawn = Pawn.new("white")
+    @white_knight = Knight.new('white')
+    @white_rook = Rook.new('white')
+    @white_bishop = Bishop.new('white')
+    @white_queen = Queen.new('white')
+    @white_king = King.new('white')
+    @white_pawn = Pawn.new('white')
 
-    @black_knight = Knight.new("black")
-    @black_rook = Rook.new("black")
-    @black_bishop = Bishop.new("black")
-    @black_queen = Queen.new("black")
-    @black_king = King.new("black")
-    @black_pawn = Pawn.new("black")
+    @black_knight = Knight.new('black')
+    @black_rook = Rook.new('black')
+    @black_bishop = Bishop.new('black')
+    @black_queen = Queen.new('black')
+    @black_king = King.new('black')
+    @black_pawn = Pawn.new('black')
   end
 
   # Setup display of the full chess board
@@ -57,7 +57,7 @@ class SetupDisplay
     create_white_bishops
     create_white_queen
     create_white_king
-    # create_white_pawns
+    create_white_pawns
   end
 
   def create_white_knights
@@ -97,7 +97,7 @@ class SetupDisplay
     create_black_bishops
     create_black_queen
     create_black_king
-    # create_black_pawns
+    create_black_pawns
   end
 
   def create_black_knights

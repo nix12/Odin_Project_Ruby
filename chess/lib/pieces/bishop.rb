@@ -1,4 +1,4 @@
-require_relative "piece"
+require_relative 'piece'
 
 # Handles the creation of the Bishop chess piece
 
@@ -13,9 +13,9 @@ class Bishop < Piece
     ].freeze
   end
 
-private
+  private
 
   def set_icon
-    color == "white" ? "\u265D" : "\u2657"
+    color == 'white' ? "\u265D" : "\u2657"
   end
 end

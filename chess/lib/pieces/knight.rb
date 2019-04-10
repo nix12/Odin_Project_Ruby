@@ -1,4 +1,4 @@
-require_relative "piece"
+require_relative 'piece'
 
 # Handles creation of the Knight chess piece.
 
@@ -13,9 +13,9 @@ class Knight < Piece
     ].freeze
   end
 
-private
+  private
 
   def set_icon
-    color == "white" ? "\u265E" : "\u2658"
+    color == 'white' ? "\u265E" : "\u2658"
   end
 end
