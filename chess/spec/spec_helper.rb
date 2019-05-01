@@ -3,6 +3,8 @@ Dotenv.load('db/settings.env')
 require 'rubygems'
 require 'rspec/core'
 require 'spork'
+ENV['RUBY_ENV'] ||= 'test'
+
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
@@ -12,7 +14,19 @@ Spork.prefork do
   # need to restart spork for it take effect.
   unless ENV['DRB']
     require 'simplecov'
-    SimpleCov.start
+    # SimpleCov.start
+
+    def load(file, wrap = false)
+      SimpleCov.result
+      SimpleCov.start do
+        command_name "#{command_name}1"
+      end
+      Kernel.load(file, wrap)
+    end
+
+    SimpleCov.at_exit do
+      SimpleCov.result.format!
+    end
   end
 end
 
@@ -20,7 +34,19 @@ Spork.each_run do
   # This code will be run each time you run your specs.
   if ENV['DRB']
     require 'simplecov'
-    SimpleCov.start
+    # SimpleCov.start
+
+    def load(file, wrap = false)
+      SimpleCov.result
+      SimpleCov.start do
+        command_name "#{command_name}1"
+      end
+      Kernel.load(file, wrap)
+    end
+
+    SimpleCov.at_exit do
+      SimpleCov.result.format!
+    end
   end
 end
 
@@ -72,6 +98,14 @@ end
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.around(:example) do |ex|
+    begin
+      ex.run
+    rescue SystemExit => e
+      puts "Got SystemExit: #{e.inspect}. Ignoring"
+    end
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

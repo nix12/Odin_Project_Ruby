@@ -13,18 +13,18 @@ RSpec.describe GameMechanics do
   let(:white_queen) { game.white_queen }
   let(:white_pawn) { game.white_pawn }
   let(:black_pawn) { game.black_pawn }
-  let(:player1) { subject.create_white_player }
-  let(:player2) { subject.create_black_player }
+  let(:player1) { described_class.create_white_player }
+  let(:player2) { described_class.create_black_player }
   
   before(:each) do
     game.setup_board
     display.setup_display
   end
 
-  describe '#self.select_piece' do
+  describe '::self.select_piece' do
     it 'should call move' do
       allow(white_pawn).to receive(:move).with(board, [1, 0], [3, 0])
-      subject.select_piece(game, [1, 0], [3, 0]) 
+      described_class.select_piece(game, [1, 0], [3, 0]) 
     end
 
     it 'should call take_piece' do
@@ -36,11 +36,11 @@ RSpec.describe GameMechanics do
       end
 
       allow(white_pawn).to receive(:take_piece).with(board, [1, 0], [2, 1])
-      subject.select_piece(game, [1, 0], [2, 1])
+      described_class.select_piece(game, [1, 0], [2, 1])
     end
   end
 
-  describe '#self.create_white_player' do
+  describe '::self.create_white_player' do
     it 'should output "Enter first player\'s name:" to console' do
       allow($stdin).to receive(:gets).and_return('test')
       expect { player1 }.to output(puts "Enter first player's name:").to_stdout
@@ -50,7 +50,7 @@ RSpec.describe GameMechanics do
     end
   end
 
-  describe '#self.create_black_player' do
+  describe '::self.create_black_player' do
     it 'should output "Enter second player\'s name:" to console' do
       allow($stdin).to receive(:gets).and_return('user')
       expect { player2 }.to output(puts "Enter second player's name:").to_stdout
@@ -60,7 +60,7 @@ RSpec.describe GameMechanics do
     end
   end
 
-  describe '#self.change_turn' do
+  describe '::self.change_turn' do
     before(:each) do
       allow($stdin).to receive(:gets).and_return('test', 'user')
     end
@@ -72,7 +72,7 @@ RSpec.describe GameMechanics do
 
     it 'should start with player1 active after change_turn is called the first time' do
       expect(player1.active).to eq(false)
-      subject.change_turn(player1, player2)
+      described_class.change_turn(player1, player2)
       expect(player1.active).to eq(true)
     end
 
@@ -80,7 +80,7 @@ RSpec.describe GameMechanics do
       player1.active = true
       expect(player1.active).to eq(true)
       expect(player2.active).to eq(false)
-      subject.change_turn(player1, player2)
+      described_class.change_turn(player1, player2)
       expect(player1.active).to eq(false)
       expect(player2.active).to eq(true)
     end
@@ -89,37 +89,37 @@ RSpec.describe GameMechanics do
       player2.active = true
       expect(player1.active).to eq(false)
       expect(player2.active).to eq(true)
-      subject.change_turn(player1, player2)
+      described_class.change_turn(player1, player2)
       expect(player1.active).to eq(true)
       expect(player2.active).to eq(false)
     end
   end
 
-  describe '#self.get_my_king' do
+  describe '::self.get_my_king' do
     before(:each) do
       allow($stdin).to receive(:gets).and_return('test')
     end
 
     it 'should return location of owners king' do
       allow(board).to receive(:find_by_piece).with('king').and_return([[0, 4], [7, 4]])
-      expect(subject.get_my_king(board, player1)).to eq([0, 4])
+      expect(described_class.get_my_king(board, player1)).to eq([0, 4])
     end
   end
 
-  describe '#self.get_my_king' do
+  describe '::self.get_my_king' do
     before(:each) do
       allow($stdin).to receive(:gets).and_return('test')
     end
 
     it 'should return location of owners king' do
       allow(board).to receive(:find_by_piece).with('king').and_return([[0, 4], [7, 4]])
-      expect(subject.get_enemy_king(board, player1)).to eq([7, 4])
+      expect(described_class.get_enemy_king(board, player1)).to eq([7, 4])
     end
   end
 
-  describe '#self.has_check?' do
+  describe '::self.has_check?' do
     it 'should return false when enemy king is in check' do
-      expect(subject.has_check?(game, [7, 4])).to eq(false)
+      expect(described_class.has_check?(game, [7, 4])).to eq(false)
     end
 
     it 'should return true when enemy king is in check' do
@@ -131,11 +131,11 @@ RSpec.describe GameMechanics do
       end
 
       white_queen.move(board, [0, 3], [1, 4])
-      expect(subject.has_check?(game, [7, 4])).to eq(true)
+      expect(described_class.has_check?(game, [7, 4])).to eq(true)
     end
   end
 
-  describe '#self.check_prevention' do
+  describe '::self.check_prevention' do
     it 'calls prevent_move_into_check' do
       allow(black_king).to receive(:prevent_move_into_check)
         .with(board, [7, 4])
@@ -144,7 +144,7 @@ RSpec.describe GameMechanics do
     end
 
     it 'should return empty array when no moves are available' do
-      expect(subject.check_prevention(game, [7, 4])).to eq([])
+      expect(described_class.check_prevention(game, [7, 4])).to eq([])
     end
 
     it 'should return array of available moves' do
@@ -156,23 +156,23 @@ RSpec.describe GameMechanics do
       end
 
       white_queen.move(board, [0, 3], [1, 4])
-      expect(subject.check_prevention(game, [7, 4])).to eq([[6, 3], [6, 5]])
+      expect(described_class.check_prevention(game, [7, 4])).to eq([[6, 3], [6, 5]])
     end
   end
 
-  describe '#self.has_checkmate?' do
+  describe '::self.has_checkmate?' do
     it "should call enemy king's check method" do
       allow(black_king).to receive_message_chain(:check, :any?)
-      subject.has_checkmate?(game, [7, 4])
+      described_class.has_checkmate?(game, [7, 4])
     end
 
     it "should call enemy king's checkmate? method" do
       allow(black_king).to receive(:checkmate?).with(board, [7, 4])
-      subject.has_checkmate?(game, [7, 4])
+      described_class.has_checkmate?(game, [7, 4])
     end
 
     it 'should return false when not in checkmate' do
-      expect(subject.has_checkmate?(game, [7, 4])).to eq(false)
+      expect(described_class.has_checkmate?(game, [7, 4])).to eq(false)
     end
 
     it 'should return true when in checkmate' do
@@ -186,27 +186,27 @@ RSpec.describe GameMechanics do
       white_queen.move(board, [0, 3], [1, 4])
       white_queen.move(board, [1, 4], [6, 4])
 
-      expect(subject.has_checkmate?(game, [7, 4])).to eq(true)
+      expect(described_class.has_checkmate?(game, [7, 4])).to eq(true)
     end
   end
 
-  describe '#self.error_check?' do
+  describe '::self.error_check?' do
     it 'should return false if there is no error' do
-      expect(subject.error_check?(game, [0, 4])).to eq(false)
+      expect(described_class.error_check?(game, [0, 4])).to eq(false)
     end
 
     it 'should return true if there is an error' do
       white_pawn.move(board, [1, 0], [2, 1])
-      expect(subject.error_check?(game, [1, 0])).to eq(true)
+      expect(described_class.error_check?(game, [1, 0])).to eq(true)
     end
   end
 
-  describe '#self.reset_error' do
+  describe '::self.reset_error' do
     it 'sets a pieces error back to false' do
       white_pawn.move(board, [1, 0], [2, 1])
-      expect(subject.error_check?(game, [1, 0])).to eq(true)
-      subject.reset_error(game, [1, 0])
-      expect(subject.error_check?(game, [1, 0])).to eq(false)
+      expect(described_class.error_check?(game, [1, 0])).to eq(true)
+      described_class.reset_error(game, [1, 0])
+      expect(described_class.error_check?(game, [1, 0])).to eq(false)
     end
   end
 end

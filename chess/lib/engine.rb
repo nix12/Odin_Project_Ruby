@@ -12,7 +12,7 @@ require 'date'
 SaveMechanics.surpress_notice
 SaveMechanics.create_table
 
-puts 'Press enter to start a new game.'
+puts 'Press any other button to start a new game.'
 puts 'Enter 1 to load a previous game.'
 answer = $stdin.gets.chomp
 
@@ -91,7 +91,7 @@ loop do
 
     if start_location == 'save'
       SaveMechanics.preserve_turn(player1, player2)
-
+      
       if created_at < DateTime.parse(DateTime.now.strftime("%b %-d %Y %-l:%M %p"))
         SaveMechanics.update(
           id,
@@ -107,14 +107,11 @@ loop do
           player2.to_json,
           DateTime.now.strftime("%b %-d %Y %-l:%M %p"),
           DateTime.now.strftime("%b %-d %Y %-l:%M %p")
-        )
+        ) || redo
       end
-
-      SaveMechanics.disconnect
-      exit
     else
       start_location = start_location.split(',').flatten.map! do |num|
-        next if num.is_a?(Integer)
+        next if num.is_a?(Integer) 
 
         Integer(num)
       end
@@ -145,11 +142,8 @@ loop do
           player2.to_json,
           DateTime.now.strftime("%b %-d %Y %-l:%M %p"),
           DateTime.now.strftime("%b %-d %Y %-l:%M %p")
-        )
+        ) || redo
       end
-      
-      SaveMechanics.disconnect
-      exit
     else
       end_location = end_location.split(',').flatten.map! do |num|
         next if num.is_a?(Integer)
@@ -195,7 +189,5 @@ loop do
   enemy_king = GameMechanics.get_enemy_king(board, Player.active_user)
   GameMechanics.change_turn(player1, player2) if GameMechanics.error_check?(board, start_location)
 
-  # puts "#{Player.inactive_user_name} is in check" if GameMechanics.has_check?(board, enemy_king) &&
-  #                                                    !GameMechanics.has_checkmate?(board, enemy_king)
   puts "#{Player.inactive_user_name} is in checkmate" if GameMechanics.has_checkmate?(board, enemy_king)
 end

@@ -3,8 +3,10 @@ require 'date'
 
 # Method definition for saving chess games
 module SaveMechanics
+  ENV['RUBY_ENV'] == 'test' ? name = ENV['DB_TEST'] : name = ENV['DB_NAME']
+  
   CONN = PG.connect(
-    dbname: ENV['DB_NAME'], 
+    dbname: name,
     user: ENV['USERNAME'],
     password: ENV['DB_PASSWORD'],
     host: 'localhost',
@@ -23,14 +25,14 @@ module SaveMechanics
           instance_variable_set(k, v)
         end
       end
-  
+
       instance_variable_set(var, val) unless var.is_a?(Hash)
     end
   end
 
   def self.recursive_formatting(hash)
     my_hash = {}
-  
+
     hash.each do |k, v|
       my_hash[k.delete('@').to_sym] = if v.is_a?(Hash)
         recursive_formatting(v)
@@ -41,8 +43,8 @@ module SaveMechanics
       else
         v
       end
-    end  
-  
+    end
+
     my_hash
   end
 
@@ -73,17 +75,18 @@ module SaveMechanics
   end
 
   def self.save(board, player1, player2, created_at, updated_at)
-    if number_of_saved_games >= 10 
+    if number_of_saved_games >= 10
       puts 'You have exceeded the maximum number games of 10.'
       puts 'Would you like to delete a previously saved game'
       puts 'Enter (yes) or (no)'
-      answer = $stdin.gets.chomp
+      p SaveMechanics.list_games
+      answer = $stdin.gets.chomp.to_s
 
       if answer == 'yes'
         list_games
-        
+
         puts 'Please enter ID of game you would like to delete'
-        id = $stdin.gets.chomp
+        id = $stdin.gets.to_i
 
         delete(id)
 
@@ -97,19 +100,26 @@ module SaveMechanics
         )
 
         puts 'Your game has been saved.'
+
+        SaveMechanics.disconnect if ENV['RUBY_ENV'] != 'test'
+        exit(0)
       else
         puts 'Unable to save game.'
+        return false
       end
     else
       puts 'Saving your game.'
 
       CONN.exec_params(
-        "INSERT INTO chess (board, player1, player2, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5)",
+        'INSERT INTO chess (board, player1, player2, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5)',
         [board, player1, player2, created_at, updated_at]
       )
 
       puts 'Your game has been saved.'
+
+      SaveMechanics.disconnect if ENV['RUBY_ENV'] != 'test'
+      exit(0)
     end
   end
 
@@ -141,6 +151,11 @@ module SaveMechanics
       WHERE id = $1',
       [id, board, player1, player2, updated_at]
     )
+
+    puts 'Your game has been saved.'
+
+    SaveMechanics.disconnect if ENV['RUBY_ENV'] != 'test'
+    exit(0)
   end
 
   def self.list_games
@@ -149,16 +164,16 @@ module SaveMechanics
       FROM chess
       ORDER BY Id ASC'
     )
-    
+
     if res.ntuples.zero?
       puts 'There are no saved games at this time.'
       puts 'Exiting'
-      exit
+      exit(0)
     else
       puts 'ID      Player1   Player2    Created at               Updated at'
       res.map do |data|
         str = "#{ data['id'] }" +
-              "#{ JSON.parse(data['player1'])['@name'].rjust(11) }" + 
+              "#{ JSON.parse(data['player1'])['@name'].rjust(11) }" +
               "#{ JSON.parse(data['player2'])['@name'].rjust(11) }" +
               "#{ data['created_at'].rjust(25) }" +
               "#{ data['updated_at'].rjust(25) }"
